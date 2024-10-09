@@ -78,9 +78,6 @@ public class Character {
 
 	public void setVx(int vx) {
 		this.vx = vx;
-		
-		
-		
 	}
 
 	public int getVy() {
@@ -133,9 +130,7 @@ public class Character {
 
 	private void init(double a, double b) {
 		tx.setToTranslation(a, b);
-		
-		
-		
+		tx.scale(xScale, yScale);
 	}
 
 	private Image getImage(String path) {

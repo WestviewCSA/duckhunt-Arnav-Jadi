@@ -19,33 +19,43 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	Font  bigFont = new Font("Serif", Font.BOLD, 100);
+	Font medFont = new Font("Serif", Font.BOLD,50);
+	
+	Shark shark = new Shark();
 	Salmon salmon = new Salmon();
 	Salmon salmon1 = new Salmon();
-	Salmon salmon2 = new Salmon();
-	
+
+	Foreground foreground = new Foreground();
 	GameBackground ground = new GameBackground("backround.png");
 	
 	int roundTimer;
 	int score;
 	long time;
-	
+	int currRound = 1;
 	
 	public void init() {
 		
-		roundTimer = 0;
+		roundTimer = 30;
 		score = 0;
 		time = 0;
-		
-		
+
 		ground.setScale(8 ,8);
-		
-		salmon1.setScale(0.5, 0.5); 
-		
+		salmon1.setScale(1, 1);
 		salmon.setWidthHeight(90,90);
-		salmon.setScale(3,3);
-		salmon.setVx(1);
+		salmon.setScale(1,1);
 		
 		
+		salmon.setVx((int) Math.random()* 10 + 5);
+		salmon.setVy((int) Math.random()* 10 + 5);
+
+		
+		
+		foreground.setXY(0,500);
+		foreground.setScale(8,9);
+		
+		shark.setWidthHeight(200, 200);
+		shark.setScale(5, 5);
+		shark.setXY(0, 800);
 	}
 	
 	
@@ -53,6 +63,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		
 	}
+
+	public void nextRound() {
+
+		roundTimer = 30;
+		currRound++;
+
+		salmon.setXY(250,250);
+
+		int randV = (int)(Math.random()*4) + 1;
+
+		salmon.setVx(randV + currRound);
+		salmon.setVy(randV + currRound);
+	}
+
 	
 	
 	public void paint(Graphics g) {
@@ -64,38 +88,62 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			
 			roundTimer -= 1;
 			if (roundTimer == 0 ) {
-				reset();
-				
+				nextRound();
+				g.drawString("Press the space bar for the next round", 0,  0);
+				t.stop();
+				g.drawString("Press the space bar for the next round", 0,  0);
+
 			}
 		}
 		
-	
+//		if(!t.isRunning()) {
+//			g.drawString("Press the space bar for the next round", 50, 0);
+//		}
 		
 		
 		ground.paint(g);
 		
-		salmon1.paint(g);
+		//salmon1.paint(g);
 		
 		salmon.paint(g);
+		shark.paint(g);
+		foreground.paint(g);
+		
+		g.setFont(medFont);
+		g.drawString("" + this.roundTimer, 200, 100);
+
+		g.setFont(medFont);
+		g.drawString("Round " + this.currRound, 50, 700);
 		
 		
-//		ground.setScale(8, 8);
-//		salmon.setScale(4, 4);
-//		salmon.setVx(1);
-//		
-//		ground.setScale(1.1,1.0);
-//		ground.setXY(0,500);
+//		if(salmon.getY() > 560) {
+//			salmon.setX(200);
+//			salmon.setY(150);
+//			salmon.setVx(3);
+//			salmon.setVy(0);
 		
-		
-		if(salmon.getY() > 560) {
-			salmon.setX(200);
-			salmon.setY(150);
-			salmon.setVx(3);
-			salmon.setVy(0);
+
+		if(salmon.getX() > 700) {
+			salmon.setVx(salmon.getVx()*-1);
+		}
+
+		if (salmon.getY() < 0) {
+			salmon.setVy(salmon.getVy()*-1);
+		}
+		if (salmon.getX() < 0) {
+			salmon.setVx(salmon.getVx()*-1);
+		}
+		if (salmon.getY() > 650) {
+			salmon.setVy(salmon.getVx()*-1);
 		}
 		
-		g.setFont(bigFont);
-		g.drawString("" + this.roundTimer, 200, 100);
+		
+		
+		
+		salmon1.setVy(0);
+		
+		salmon1.setVy(0);
+		
 		
 	}
 	
@@ -114,14 +162,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.addKeyListener(this);	
 		
 		init();
-		
-		Timer t = new Timer(16, this);
+
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}
-	
-	
+
+	Timer t = new Timer(16, this);
+
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
@@ -153,6 +201,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		if(rSalmon.intersects(rMain)) {
 			salmon.setVy(10);
 			salmon.setVx(0);
+			
+		shark.setX(salmon1.getX()); //may need to add some offset to center	
+		shark.setY(500);  
+		shark.setVy(-3);
+		
+		
+		
+			
 		}
 	}
 
@@ -172,6 +228,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		System.out.println(arg0.getKeyCode());
+
+		if(arg0.getKeyCode() == 32) {
+			if (!t.isRunning()) {
+				t.start();
+			}
+		}
 	}
 
 	@Override

@@ -7,11 +7,11 @@ import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 
-public class alien extends Character{
+public class Shark extends Character{
 
 
-	public alien() {
-		super("alien.png"); //load the image for Tree
+	public Shark() {
+		super("shark.png"); //load the image for Tree
 	}	
 
 
