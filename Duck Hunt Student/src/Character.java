@@ -17,7 +17,7 @@ public class Character {
 	private int x, y;							//position
 	private double xScale = 1.0, yScale = 1.0;	//scaling (sizing)
 	private int width = 50, height = 50;
-	private boolean showHitBox = true;
+	private boolean showHitBox = false;
 	
 	public Character(String fileName) {
 		img = getImage("/imgs/"+fileName); // load the image for Tree
